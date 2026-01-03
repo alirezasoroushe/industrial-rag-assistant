@@ -28,7 +28,7 @@ Building this system in the fast-evolving AI landscape presented several "real-w
 **Tip:** Always hard-code specific model versions (e.g., `gemini-2.5-flash`) rather than using `-latest` tags in production to prevent breaking changes when models are updated.
 
 ### 2. LangChain Modularization (ModuleNotFoundError)
-**Problem:** LangChain split its core logic from community integrations, causing imports like `RetrievalQA` to fail.
+**Problem:** LangChain split its core logic from community integrations, causing imports like `RetrievalQA` to fail.<br>
 **Solution:** Installed `langchain-classic` and updated import paths to `langchain_classic.chains` to bridge the legacy logic with the new 2026 framework.
 **Tip:** Use a virtual environment (Conda or Venv) to isolate dependencies, ensuring that "Community" packages don't conflict with "Core" AI logic.
 
@@ -71,4 +71,5 @@ graph TD
     style D fill:#f9f,stroke:#333,stroke-width:2px
     style Gemini fill:#00f,color:#fff
 ```
+
     
