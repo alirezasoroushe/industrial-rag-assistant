@@ -1,3 +1,8 @@
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import streamlit as st
+import os
 import streamlit as st
 import os
 from dotenv import load_dotenv
@@ -13,16 +18,24 @@ st.title("🤖 Siemens S7-1200 Expert")
 st.markdown("Ask technical questions based on the 1,597-page manual.")
 
 # 2. Load Environment & Setup Models
-load_dotenv()
+if "GOOGLE_API_KEY" in st.secrets:
+    os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+else:
+    st.error("Please set the GOOGLE_API_KEY in Streamlit Secrets.")
+    st.stop()
 
-# Use 2026 Stable Model IDs
 embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004")
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
 # 3. Connect to the Vector Memory
-# Ensure you already ran create_vectors.py!
+DB_PATH = "industrial_db/201bc019-261f-4456-ba6d-3cc057039a34" 
+
+if not os.path.exists(DB_PATH):
+    st.error(f"Database path not found: {DB_PATH}. Please check your GitHub folder name.")
+    st.stop()
+
 vector_db = Chroma(
-    persist_directory="./industrial_db", 
+    persist_directory=DB_PATH, 
     embedding_function=embeddings
 )
 
@@ -69,4 +82,5 @@ if prompt := st.chat_input("Ex: How do I wire a digital input?"):
                     st.caption(f"Context: {doc.page_content[:200]}...")
             
             # Save assistant response to history
+
             st.session_state.messages.append({"role": "assistant", "content": answer})
