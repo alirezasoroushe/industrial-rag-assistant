@@ -1,4 +1,3 @@
 .env
 industrial_db/
-data/*.pdf
 __pycache__/
