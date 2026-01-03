@@ -28,10 +28,11 @@ embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004")
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
 # 3. Connect to the Vector Memory
-DB_PATH = "industrial_db/201bc019-261f-4456-ba6d-3cc057039a34" 
+# Point to the folder that contains 'chroma.sqlite3'
+DB_PATH = "industrial_db" 
 
-if not os.path.exists(DB_PATH):
-    st.error(f"Database path not found: {DB_PATH}. Please check your GitHub folder name.")
+if not os.path.exists(os.path.join(DB_PATH, "chroma.sqlite3")):
+    st.error(f"Critical Error: 'chroma.sqlite3' not found in {DB_PATH}. Check your GitHub upload.")
     st.stop()
 
 vector_db = Chroma(
@@ -84,3 +85,4 @@ if prompt := st.chat_input("Ex: How do I wire a digital input?"):
             # Save assistant response to history
 
             st.session_state.messages.append({"role": "assistant", "content": answer})
+
